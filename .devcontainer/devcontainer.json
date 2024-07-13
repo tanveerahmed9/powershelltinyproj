@@ -1,40 +1,34 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/powershell
-{
-	"name": "PowerShell",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/powershell:lts-debian-11",
-	"features": {
-		"ghcr.io/devcontainers/features/common-utils:2": {
-			"installZsh": "true",
-			"username": "vscode",
-			"upgradePackages": "false",
-			"nonFreePackages": "true"
-		},
-		"ghcr.io/devcontainers/features/powershell:1": {}
-	},
+# Use Microsoft's official PowerShell image as a base
+FROM mcr.microsoft.com/powershell:latest
 
-	"postCreateCommand": "sudo chsh vscode -s \"$(which pwsh)\"",
+# Install necessary tools and dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    wget \
+    unzip \
+    nodejs \
+    npm \
+    && rm -rf /var/lib/apt/lists/
 
-	// Configure tool-specific properties.
-	"customizations": {
-		// Configure properties specific to VS Code.
-		"vscode": {
-			// Set *default* container specific settings.json values on container create.
-			"settings": { 
-				"terminal.integrated.defaultProfile.linux": "pwsh"
-			},
-			
-			// Add the IDs of extensions you want installed when the container is created.
-			"extensions": [
-				"ms-vscode.powershell"
-			]
-		}
-	}
+# Install Azure Functions Core Tools
+RUN wget -q "https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb" \
+    && dpkg -i packages-microsoft-prod.deb \
+    && apt-get update \
+    && apt-get install -y azure-functions-core-tools-4
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+# Install Azure CLI
+RUN curl -sL "https://aka.ms/InstallAzureCLIDeb" | bash
 
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
-}
+# Install PowerShell modules
+RUN pwsh -Command "Install-Module -Name Az -Force -AllowClobber -Scope AllUsers" \
+    && pwsh -Command "Install-Module -Name Az.Functions -Force -AllowClobber -Scope AllUsers"
+
+# Set the default shell to PowerShell
+SHELL ["pwsh", "-Command"]
+
+# Set the working directory
+WORKDIR /workspace
+
+# Keep the container running
+CMD ["pwsh"]
