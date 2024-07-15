@@ -2,28 +2,33 @@
     "name": "PowerShell Azure Functions Development",
     "dockerFile": "dockerfile",
     "forwardPorts": [7071],
-    "settings": {
-        "terminal.integrated.defaultProfile.linux": "pwsh",
-        "powershell.powerShellDefaultVersion": "PowerShell",
-        "azure.resourceGroups.sortOrder": "alphabetically",
-        "azureFunctions.projectLanguage": "PowerShell",
-        "azureFunctions.projectRuntime": "~4",
-        "editor.formatOnSave": true,
-        "editor.formatOnType": true,
-        "files.autoSave": "afterDelay",
-        "files.autoSaveDelay": 1000
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.powershell",
+                "ms-vscode.azure-account",
+                "ms-azuretools.vscode-azurefunctions",
+                "ms-azuretools.vscode-azureresourcegroups",
+                "msazurermtools.azurerm-vscode-tools",
+                "ms-dotnettools.vscode-dotnet-runtime",
+                "streetsidesoftware.code-spell-checker",
+                "eamodio.gitlens",
+                "yzhang.markdown-all-in-one"
+            ],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "pwsh",
+                "powershell.powerShellDefaultVersion": "PowerShell",
+                "azure.resourceGroups.sortOrder": "alphabetically",
+                "azureFunctions.projectLanguage": "PowerShell",
+                "azureFunctions.projectRuntime": "~4",
+                "editor.formatOnSave": true,
+                "editor.formatOnType": true,
+                "files.autoSave": "afterDelay",
+                "files.autoSaveDelay": 1000
+            }
+        }
+
     },
-    "extensions": [
-        "ms-vscode.powershell",
-        "ms-vscode.azure-account",
-        "ms-azuretools.vscode-azurefunctions",
-        "ms-azuretools.vscode-azureresourcegroups",
-        "msazurermtools.azurerm-vscode-tools",
-        "ms-dotnettools.vscode-dotnet-runtime",
-        "streetsidesoftware.code-spell-checker",
-        "eamodio.gitlens",
-        "yzhang.markdown-all-in-one"
-    ],
     "remoteUser": "vscode",
     "postCreateCommand": "pwsh -Command 'Install-Module -Name Az.Functions -Force -AllowClobber -Scope CurrentUser'"
 }
