@@ -1,34 +1,29 @@
-# Use Microsoft's official PowerShell image as a base
-FROM mcr.microsoft.com/powershell:latest
-
-# Install necessary tools and dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    wget \
-    unzip \
-    nodejs \
-    npm \
-    && rm -rf /var/lib/apt/lists/
-
-# Install Azure Functions Core Tools
-RUN wget -q "https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb" \
-    && dpkg -i packages-microsoft-prod.deb \
-    && apt-get update \
-    && apt-get install -y azure-functions-core-tools-4
-
-# Install Azure CLI
-RUN curl -sL "https://aka.ms/InstallAzureCLIDeb" | bash
-
-# Install PowerShell modules
-RUN pwsh -Command "Install-Module -Name Az -Force -AllowClobber -Scope AllUsers" \
-    && pwsh -Command "Install-Module -Name Az.Functions -Force -AllowClobber -Scope AllUsers"
-
-# Set the default shell to PowerShell
-SHELL ["pwsh", "-Command"]
-
-# Set the working directory
-WORKDIR /workspace
-
-# Keep the container running
-CMD ["pwsh"]
+{
+    "name": "PowerShell Azure Functions Development",
+    "dockerFile": "dockerfile",
+    "forwardPorts": [7071],
+    "settings": {
+        "terminal.integrated.defaultProfile.linux": "pwsh",
+        "powershell.powerShellDefaultVersion": "PowerShell",
+        "azure.resourceGroups.sortOrder": "alphabetically",
+        "azureFunctions.projectLanguage": "PowerShell",
+        "azureFunctions.projectRuntime": "~4",
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "files.autoSave": "afterDelay",
+        "files.autoSaveDelay": 1000
+    },
+    "extensions": [
+        "ms-vscode.powershell",
+        "ms-vscode.azure-account",
+        "ms-azuretools.vscode-azurefunctions",
+        "ms-azuretools.vscode-azureresourcegroups",
+        "msazurermtools.azurerm-vscode-tools",
+        "ms-dotnettools.vscode-dotnet-runtime",
+        "streetsidesoftware.code-spell-checker",
+        "eamodio.gitlens",
+        "yzhang.markdown-all-in-one"
+    ],
+    "remoteUser": "vscode",
+    "postCreateCommand": "pwsh -Command 'Install-Module -Name Az.Functions -Force -AllowClobber -Scope CurrentUser'"
+}
