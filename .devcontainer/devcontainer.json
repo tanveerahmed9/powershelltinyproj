@@ -29,6 +29,5 @@
         }
 
     },
-    "remoteUser": "vscode",
     "postCreateCommand": "pwsh -Command 'Install-Module -Name Az.Functions -Force -AllowClobber -Scope CurrentUser'"
 }
