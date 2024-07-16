@@ -11,9 +11,11 @@
       ]
     },
     {
-      "type": "http",
-      "direction": "out",
-      "name": "Response"
+      "type": "table",
+      "name": "outputTable",
+      "tableName": "tb1",
+      "connection": "AzureWebJobsStorage",
+      "direction": "out"
     }
   ]
 }

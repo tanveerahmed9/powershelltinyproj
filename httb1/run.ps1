@@ -1,25 +1,33 @@
-using namespace System.Net
+param($Timer)
 
-# Input bindings are passed in via param block.
-param($Request, $TriggerMetadata)
+# Function to generate a random username
+function Get-RandomUsername {
+    $adjectives = @("Happy", "Sunny", "Clever", "Brave", "Gentle", "Wise", "Kind", "Swift", "Calm", "Bright")
+    $nouns = @("Lion", "Eagle", "Dolphin", "Tiger", "Panda", "Wolf", "Bear", "Fox", "Owl", "Hawk")
+    $number = Get-Random -Minimum 100 -Maximum 999
 
-# Write to the Azure Functions log stream.
-Write-Host "PowerShell HTTP trigger function processed a request."
+    $adjective = Get-Random -InputObject $adjectives
+    $noun = Get-Random -InputObject $nouns
 
-# Interact with query parameters or the body of the request.
-$name = $Request.Query.Name
-if (-not $name) {
-    $name = $Request.Body.Name
+    return "$adjective$noun$number"
 }
 
-$body = "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-
-if ($name) {
-    $body = "Hello, $name. This HTTP triggered function executed successfully."
+# Generate 5 random users
+$users = @()
+for ($i = 1; $i -le 5; $i++) {
+    $username = Get-RandomUsername
+    $user = @{
+        PartitionKey = "Users"
+        RowKey       = $username
+        Username     = $username
+        CreatedDate  = (Get-Date).ToString("o")
+    }
+    $users += $user
 }
 
-# Associate values to output bindings by calling 'Push-OutputBinding'.
-Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
-        StatusCode = [HttpStatusCode]::OK
-        Body       = $body
-    })
+# Output the users to the table
+Push-OutputBinding -Name outputTable -Value $users
+
+# Log the operation
+Write-Host "Added 5 new users to the Users table:"
+$users | ForEach-Object { Write-Host $_.Username }
