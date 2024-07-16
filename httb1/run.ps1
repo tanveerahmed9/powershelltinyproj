@@ -26,7 +26,12 @@ for ($i = 1; $i -le 5; $i++) {
 }
 
 # Output the users to the table
-Push-OutputBinding -Name outputTable -Value $users
+try {
+    Push-OutputBinding -Name outputTable -Value $users
+}
+catch {
+    Write-Host "Error while running function app $_"
+}
 
 # Log the operation
 Write-Host "Added 5 new users to the Users table:"
