@@ -30,7 +30,8 @@ try {
     Push-OutputBinding -Name outputTable -Value $users 
 }
 catch {
-    Write-Host "Error while putting users in the table $_"
+    Write-Error "An error occurred: $_"
+    Write-Error $_.ScriptStackTrace
 }
 
 # Log the operation
