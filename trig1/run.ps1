@@ -30,12 +30,9 @@ try {
 
     # Output the users to the queue
     Write-Host "Attempting to push users to queue"
-    $userMessages = $users | ForEach-Object { 
-        [PSCustomObject]@{
-            MessageText = $_ 
-        }
+    $users | ForEach-Object {
+        Push-OutputBinding -Name outputQueue -Value $_
     }
-    Push-OutputBinding -Name outputQueue -Value $userMessages
 
     # Log the operation
     Write-Host "Successfully added 5 new users to the queue:"
