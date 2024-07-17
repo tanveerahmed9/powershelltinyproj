@@ -15,7 +15,7 @@ function Get-RandomUsername {
 # Generate 5 random users
 $users = @()
 for ($i = 1; $i -le 5; $i++) {
-    $username = Get-RandomUsername
+    $username = Get-RandomUsername 
     $user = @{
         PartitionKey = "Users"
         RowKey       = $username
@@ -26,7 +26,12 @@ for ($i = 1; $i -le 5; $i++) {
 }
 
 # Output the users to the table
-Push-OutputBinding -Name outputTable -Value $users
+try {
+    Push-OutputBinding -Name outputTable -Value $users 
+}
+catch {
+    Write-Host "Error while putting users in the table"
+}
 
 # Log the operation
 Write-Host "Added 5 new users to the Users table:"
