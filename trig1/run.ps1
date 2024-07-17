@@ -32,7 +32,7 @@ try {
     Write-Host "Attempting to push users to queue"
     $userMessages = $users | ForEach-Object { 
         [PSCustomObject]@{
-            MessageText = ($_ ~)
+            MessageText = $_ 
         }
     }
     Push-OutputBinding -Name outputQueue -Value $userMessages
