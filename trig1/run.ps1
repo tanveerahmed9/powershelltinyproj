@@ -1,4 +1,4 @@
-
+param ($timer)
 # Function to generate a random username
 function Get-RandomUsername {
     $adjectives = @("Happy", "Sunny", "Clever", "Brave", "Gentle", "Wise", "Kind", "Swift", "Calm", "Bright")
