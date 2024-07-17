@@ -1,7 +1,7 @@
 {
   "bindings": [
     {
-      "authLevel": "anonymous",
+      "authLevel": "function",
       "type": "httpTrigger",
       "direction": "in",
       "name": "Request",
@@ -11,9 +11,14 @@
       ]
     },
     {
+      "type": "http",
+      "direction": "out",
+      "name": "$return"
+    },
+    {
       "type": "table",
       "name": "outputTable",
-      "tableName": "tab1",
+      "tableName": "Users",
       "connection": "AzureWebJobsStorage",
       "direction": "out"
     }
