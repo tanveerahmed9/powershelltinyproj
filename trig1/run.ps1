@@ -1,4 +1,3 @@
-param($Timer)
 
 # Function to generate a random username
 function Get-RandomUsername {
