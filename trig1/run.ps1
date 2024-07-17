@@ -24,11 +24,7 @@ try {
     $users = @()
     for ($i = 1; $i -le 5; $i++) {
         $username = Get-RandomUsername
-        $user = @{
-            Username    = $username
-            CreatedDate = (Get-Date).ToString("o")
-        }
-        $users += $user
+        $users += $username
         Write-Host "Generated user: $username"
     }
 
@@ -36,7 +32,7 @@ try {
     Write-Host "Attempting to push users to queue"
     $userMessages = $users | ForEach-Object { 
         [PSCustomObject]@{
-            MessageText = ($_ | ConvertTo-Json -Compress)
+            MessageText = ($_ ~)
         }
     }
     Push-OutputBinding -Name outputQueue -Value $userMessages
