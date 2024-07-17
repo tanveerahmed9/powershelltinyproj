@@ -48,7 +48,7 @@ try {
     # Prepare the response
     $body = "Successfully added 5 new users to the queue: $($usernames -join ', ')"
     
-    # Associate values to output bindings by calling 'Push-OutputBinding'.
+    # Return the HTTP response
     Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
             StatusCode = [HttpStatusCode]::OK
             Body       = $body
@@ -65,3 +65,5 @@ catch {
             Body       = "An error occurred while processing the request: $_"
         })
 }
+
+# Return the response
