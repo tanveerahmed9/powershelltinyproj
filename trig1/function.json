@@ -16,11 +16,11 @@
       "name": "$return"
     },
     {
-      "type": "table",
-      "name": "outputTable",
-      "tableName": "Users",
-      "connection": "AzureWebJobsStorage",
-      "direction": "out"
+      "type": "queue",
+      "direction": "out",
+      "name": "outputQueue",
+      "queueName": "asaas",
+      "connection": "AzureWebJobsStorage"
     }
   ]
 }

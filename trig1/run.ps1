@@ -25,31 +25,34 @@ try {
     for ($i = 1; $i -le 5; $i++) {
         $username = Get-RandomUsername
         $user = @{
-            PartitionKey = "Users"
-            RowKey = $username
-            Username = $username
+            Username    = $username
             CreatedDate = (Get-Date).ToString("o")
         }
         $users += $user
         Write-Host "Generated user: $username"
     }
 
-    # Output the users to the table
-    Write-Host "Attempting to push users to table"
-    Push-OutputBinding -Name outputTable -Value $users
+    # Output the users to the queue
+    Write-Host "Attempting to push users to queue"
+    $userMessages = $users | ForEach-Object { 
+        [PSCustomObject]@{
+            MessageText = ($_ | ConvertTo-Json -Compress)
+        }
+    }
+    Push-OutputBinding -Name outputQueue -Value $userMessages
 
     # Log the operation
-    Write-Host "Successfully added 5 new users to the Users table:"
+    Write-Host "Successfully added 5 new users to the queue:"
     $usernames = $users | ForEach-Object { $_.Username }
 
     # Prepare the response
-    $body = "Successfully added 5 new users to the Users table: $($usernames -join ', ')"
+    $body = "Successfully added 5 new users to the queue: $($usernames -join ', ')"
     
     # Associate values to output bindings by calling 'Push-OutputBinding'.
     Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
-        StatusCode = [HttpStatusCode]::OK
-        Body = $body
-    })
+            StatusCode = [HttpStatusCode]::OK
+            Body       = $body
+        })
 }
 catch {
     # Log any errors
@@ -58,7 +61,7 @@ catch {
 
     # Return an error response
     Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
-        StatusCode = [HttpStatusCode]::InternalServerError
-        Body = "An error occurred while processing the request: $_"
-    })
+            StatusCode = [HttpStatusCode]::InternalServerError
+            Body       = "An error occurred while processing the request: $_"
+        })
 }
